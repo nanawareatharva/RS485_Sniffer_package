@@ -1,0 +1,52 @@
+ROOM MONITOR (1ACCORD / COOL CROP) - HOW TO UPLOAD
+Board: Waveshare ESP32-S3-Touch-LCD-7B
+=====================================================
+
+CONNECT THE BOARD
+  1. USB-C cable into the board's port marked "UART".
+  2. The small UART switch on the board must be on "UART1".
+  3. Windows Device Manager > Ports (COM & LPT): note the port, e.g. "USB-SERIAL CH343 (COM21)".
+     If no port appears, install the WCH CH343 driver.
+
+-----------------------------------------------------
+OPTION A - QUICK (no Arduino software needed)
+-----------------------------------------------------
+  1. Open the "firmware" folder.
+  2. Double-click FLASH.bat and type the COM port (e.g. COM21), or run:  FLASH.bat COM21
+  3. Wait for [DONE]. The board restarts and shows the start-up screen.
+
+  If it stays at "Connecting...": hold the BOOT button, tap RESET, release BOOT, run again.
+  Saved door counts are NOT erased by this.
+
+-----------------------------------------------------
+OPTION B - FROM SOURCE (to change settings first)
+-----------------------------------------------------
+  1. Install Arduino IDE 2.x.
+  2. File > Preferences > Additional boards manager URLs:
+       https://espressif.github.io/arduino-esp32/package_esp32_index.json
+  3. Tools > Board > Boards Manager: install "esp32 by Espressif Systems" version 3.1.3
+     (NOT 3.0.x - the display driver needs 3.1 or newer).
+  4. Unpack libraries\LVGL_v8.4.0.7z (7-Zip, or "tar -xf LVGL_v8.4.0.7z") into
+       Documents\Arduino\libraries
+     so that you have Documents\Arduino\libraries\lvgl\  and  Documents\Arduino\libraries\lv_conf.h
+     Do NOT install "lvgl" from the Library Manager instead.
+  5. Open RS485_Sniffer\RS485_Sniffer.ino
+  6. Tools menu:
+       Board:            ESP32S3 Dev Module
+       Flash Size:       16MB (128Mb)
+       PSRAM:            OPI PSRAM
+       Flash Mode:       QIO 80MHz
+       Partition Scheme: 16M Flash (3MB APP/9.9MB FATFS)
+       USB CDC On Boot:  Disabled
+       Port:             your COM port
+  7. Edit RS485_Sniffer\config.h if needed (alarm minutes, door level, buzzer pin, sensors).
+  8. Click Upload. The first build takes 10-20 minutes (LVGL is large).
+
+-----------------------------------------------------
+AFTER UPLOADING - CHECK
+-----------------------------------------------------
+  - Start-up screen: 1ACCORD / COOL CROP, spinner and loading bar, then the HOME screen.
+  - Optional: Arduino IDE Serial Monitor at 115200 shows
+        Door sensor on GPIO6: CLOSED ...
+        Buzzer: PCF8574 at 0x27, buzzer on P0      (or "no PCF8574 found")
+  - Wiring details: RS485_Sniffer\README_RS485_SNIFFER.md
